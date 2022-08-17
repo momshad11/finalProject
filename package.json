@@ -1,0 +1,8 @@
+{
+  "name": "finalProject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/momshad11/finalProject.git",
+  "author": "Momshad Hussain <momshad21@gmail.com>",
+  "license": "MIT"
+}
