@@ -1,31 +1,21 @@
-import * as React from 'react'
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route} from "react-router-dom";
+import  Home  from './Home';
+import styled from "styled-components";
+
 
 function App() {
-  const [message, setM] = React.useState('no message');
-  React.useEffect(()=>{
-    fetch('/fetch-message').then(res => res.json()).then(data => setM(data.message)).catch(e=>console.log(e))
+  return(
+    <Wrapper>
+    <BrowserRouter>
+    <Routes>
+    <Route exact path="/" element={<Home/>}></Route>
+    </Routes>
+    </BrowserRouter>
+    </Wrapper>
+  )
 
-  },[])
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {message}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
 }
+const Wrapper = styled.div`
+`
 
 export default App;

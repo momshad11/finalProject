@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/momshad11/finalProject.git",
   "author": "Momshad Hussain <momshad21@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.19"
+  }
 }
