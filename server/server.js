@@ -1,8 +1,21 @@
-const express = require('express')
-const app = express()
+const express = require("express");
 
-app.get('/fetch-message', function (req, res) {
-  res.status(200).json({message:'Hello World'})
-})
+const { auth } = require("express-oauth2-jwt-bearer");
 
-app.listen(8000)
+const app = express();
+
+const checkJwt = auth({
+  audience: "http://localhost:8000",
+  issuerBaseURL: "https://dev-lvv55a4h.us.auth0.com",
+});
+
+// req.isAuthenticated is provided from the auth router
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Public" });
+});
+app.get("/fetch-message", checkJwt, function (req, res) {
+  res.status(200).json({ message: "Authenticated" });
+  //res.status(401).json({message:'Not Authenticated'})
+});
+
+app.listen(8000);
