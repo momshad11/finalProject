@@ -16,6 +16,8 @@ const Login = () => {
 
 const Button = styled.button`
 border: none;
+color: white;
+background-color: rgb(23, 34, 67);
 padding: 15px;
 font-size:30px;
 &:hover{
