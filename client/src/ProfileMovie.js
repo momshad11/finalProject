@@ -35,15 +35,15 @@ return (
       <Title>{profileMovie?.title}</Title>
       {profileMovie?.vote_average !== 0 &&
       profileMovie?.vote_average > 7.5 &&
-      <Rating style={{color:'green'}}>{profileMovie?.vote_average}</Rating>
+      <Rating style={{color:'green'}}>{profileMovie?.vote_average.toFixed(1)}</Rating>
       }
       {profileMovie?.vote_average !== 0 &&
       profileMovie?.vote_average > 6.0 &&  profileMovie?.vote_average < 7.5 &&
-      <Rating style={{color:'yellow'}}>{profileMovie?.vote_average}</Rating>
+      <Rating style={{color:'yellow'}}>{profileMovie?.vote_average.toFixed(1)}</Rating>
       }
         {profileMovie?.vote_average !== 0 &&
       profileMovie?.vote_average < 6.0 &&  
-      <Rating style={{color:'red'}}>{profileMovie?.vote_average}</Rating>
+      <Rating style={{color:'red'}}>{profileMovie?.vote_average.toFixed(1)}</Rating>
       }
       </Info>
       <Button onClick={(e) => remove(e)}>remove</Button>

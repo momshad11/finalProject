@@ -6,6 +6,7 @@ import Reviews from "./Reviews";
 import { useAuth0 } from "@auth0/auth0-react";
 import Youtube from "react-youtube";
 import Login from "./Login";
+import moment from 'moment';
 const MoviePage = () => {
   const { id } = useParams();
   const { user, isAuthenticated } = useAuth0();
@@ -157,29 +158,28 @@ const MoviePage = () => {
           <Poster src={img_path + movie?.poster_path} />
           <Span>
             <Div>
-              <Trailer>{trailer ? renderTrailer() : null}</Trailer>
-
               <Title>{movie?.title}</Title>
+              <Trailer>{trailer ? renderTrailer() : null}</Trailer>
               <Info>Overview : {movie?.overview}</Info>
               {movie?.runtime !== 0 && (
                 <Info>Runtime : {movie?.runtime} min</Info>
               )}
               <Info>Status : {movie?.status}</Info>
               <Info>
-                Genres :{" "}
+                Genre(s) :{" "}
                 {genres?.map((item) => {
                   return item.name + " ";
                 })}
               </Info>
-              <Info>Release Date : {movie?.release_date}</Info>
+              <Info>Release Date : {moment(movie?.release_date).format('MMMM Do, Y')}</Info>
               <Info>
-                Companies :{" "}
+                Companie(s) :{" "}
                 {companies?.map((item) => {
                   return item.name + " ";
                 })}
               </Info>
               <Info>
-                Countries :{" "}
+                Countrie(s)  :{" "}
                 {countries?.map((item) => {
                   return item.name + " ";
                 })}
