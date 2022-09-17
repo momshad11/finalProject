@@ -3,11 +3,16 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Context } from "./Context";
 import Reviews from "./Reviews";
+import { useAuth0 } from "@auth0/auth0-react";
 import Youtube from "react-youtube";
+import Login from "./Login";
 const MoviePage = () => {
   const { id } = useParams();
-
+  const { user, isAuthenticated } = useAuth0();
   //Usestates For movie page
+  const [userDB, setUser] = useState();
+  const [isAdded, setIsAdded] = useState(false);
+  const [Added, setAdded] = useState(false);
   const [movie, setMovies] = useState();
   const [genres, setGenres] = useState();
   const [companies, setCompanies] = useState();
@@ -73,7 +78,48 @@ const MoviePage = () => {
         console.log(error);
       });
   }, [id]);
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await fetch(`/user/${user.email}`);
+      const result = await res.json();
+      setUser(result.data);
+      result.data.watchlist
+        ? setIsAdded(
+            result.data.watchlist.filter((i) => i.id === movie.id).length > 0
+          )
+        : setIsAdded(false);
+    };
+    if (isAuthenticated) {
+      getUser();
+    }
+  }, [movie, isAuthenticated]);
 
+  const handleWatchList = async () => {
+    console.log("user ", userDB.email);
+    const body = {
+      email: userDB.email,
+      data: {
+        id: movie.id,
+        title: movie.title,
+        image: movie.poster_path,
+        score: movie.vote_average,
+      },
+    };
+    localStorage.setItem(movie.id, JSON.stringify(movie.id));
+    setAdded(true);
+    console.log("body ", body);
+    try {
+      await fetch("/watchlist", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.log("an error occured of type --- ", error);
+    }
+  };
   //function to render trailer on movie page with youtube npm package
   const renderTrailer = () => {
     //mapping through state and finding movie trailer
@@ -83,7 +129,6 @@ const MoviePage = () => {
         vid.name.includes("Trailer") ||
         vid.name.includes("Official")
     );
-
     //if movie trailer cannot be found with above logic we take the first trailer available
     const key = youtubeTrailer ? youtubeTrailer.key : trailer?.results[0]?.key;
 
@@ -91,6 +136,7 @@ const MoviePage = () => {
     if (!key) {
       return null;
     }
+
     return (
       //Youtube trailer returned
       <Youtube
@@ -100,56 +146,65 @@ const MoviePage = () => {
             autoplay: 1,
           },
         }}
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
       />
     );
   };
 
   return (
     <>
-        {/* rendering trailer if trailer exists */}
-        <Trailer>{trailer ? renderTrailer() : null}</Trailer>
-      <button>Add To profile</button>
-      {/* rendering rest of movie data */}
-      <P>
-        <Container>
-      <Title>{movie?.title}</Title>
-      <Poster src={img_path + movie?.poster_path} />
-      <div>overview : {movie?.overview}</div>
-      <div>runtime : {movie?.runtime}</div>
-      <div>status : {movie?.status}</div>
-      <div>
-        Genres :{" "}
-        {genres?.map((item) => {
-          return item.name + " ";
-        })}
-      </div>
-      <div>Release Date : {movie?.release_date}</div>
-      <div>
-        Companies :{" "}
-        {companies?.map((item) => {
-          return item.name + " ";
-        })}
-      </div>
-      <div>
-        Countries :{" "}
-        {countries?.map((item) => {
-          return item.name + " ";
-        })}
-      </div>
-      <a href={movie?.homepage}>Watch Now</a>
+      <Container>
+        <Block>
+          <Poster src={img_path + movie?.poster_path} />
+          <Span>
+            <Div>
+              <Trailer>{trailer ? renderTrailer() : null}</Trailer>
+
+              <Title>{movie?.title}</Title>
+              <Info>Overview : {movie?.overview}</Info>
+              {movie?.runtime !== 0 && (
+                <Info>Runtime : {movie?.runtime} min</Info>
+              )}
+              <Info>Status : {movie?.status}</Info>
+              <Info>
+                Genres :{" "}
+                {genres?.map((item) => {
+                  return item.name + " ";
+                })}
+              </Info>
+              <Info>Release Date : {movie?.release_date}</Info>
+              <Info>
+                Companies :{" "}
+                {companies?.map((item) => {
+                  return item.name + " ";
+                })}
+              </Info>
+              <Info>
+                Countries :{" "}
+                {countries?.map((item) => {
+                  return item.name + " ";
+                })}
+              </Info>
+              <A href={movie?.homepage}>Watch Now</A>
+              {!Added && isAuthenticated && (
+                <Button onClick={handleWatchList}>Add To Watchlist</Button>
+              )}
+              {!isAuthenticated && (
+                <Button>
+                  <Login />
+                </Button>
+              )}
+            </Div>
+          </Span>
+        </Block>
+        <Info>
+          {/* mapping over reviews and passing it to reviews componenet */}
+          <InfoR>Reviews :</InfoR>
+          {reviews?.map((item, index) => {
+            return <Reviews key={`${item}${index}`} review={item} />;
+          })}
+          {!reviews && <Info> No Reviews available </Info>}
+        </Info>
       </Container>
-     </P>
-      <div>
-        {/* mapping over reviews and passing it to reviews componenet */}
-        <h1>Reviews :</h1>
-        {reviews?.map((item, index) => {
-          return <Reviews key={`${item}${index}`} review={item} />;
-        })}
-      </div>
     </>
   );
 };
@@ -157,17 +212,56 @@ const Poster = styled.img`
   width: 600px;
   height: 800px;
 `;
-const Title = styled.h4`
+const Title = styled.h3`
+  margin-bottom: 20px;
+  font-size: 30px;
+  flex: 0 0 90%;
+`;
+
+const Trailer = styled.div``;
+const A = styled.a`
   font-size: 20px;
+  color: white;
+  text-decoration: none;
+  &:hover {
+    color: black;
+  }
 `;
 
-const Trailer = styled.div`
-
-`;
 const Container = styled.div`
-    
+  display: flex;
+  color: white;
+  flex-direction: column;
 `;
-const P = styled.div`
+const Block = styled.div`
+  display: flex;
+  margin-left: 20px;
+`;
+const Info = styled.h3`
+  margin: 20px 0px;
+`;
+const InfoR = styled.h3`
+  margin: 20px 0px;
+  font-size: 40px;
+  text-align: center;
+`;
+const Div = styled.div`
+  margin-left: 20px;
+`;
+const Span = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const Button = styled.button`
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  font-size: 20px;
+  color: white;
+  background: inherit;
+  &:hover {
+    color: black;
+  }
 `;
 
 export default MoviePage;

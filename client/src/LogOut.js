@@ -5,7 +5,7 @@ import styled from "styled-components";
 const LogOut = () => {
   const { logout } = useAuth0();
 
-  return <Button onClick={() => logout()}>log out</Button>;
+  return <Button onClick={() => logout()}>Log out</Button>;
 };
 
 const Button = styled.button`

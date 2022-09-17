@@ -1,14 +1,28 @@
-import React from 'react'
+import React from "react";
+import styled from "styled-components";
 
-const Reviews = ({review}) => {
-    console.log('review',review)
+const Reviews = ({ review }) => {
   return (
     <>
- 
-    <div>{review?.author}</div>
-    
+      <Line>
+        <Content>{review?.author} wrote: </Content>
+        <ContentR>{review?.content}</ContentR>
+      </Line>
     </>
-  )
-}
-
-export default Reviews
+  );
+};
+const Line = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const Content = styled.h3`
+  margin: 10px 0px;
+  font-size: 25px;
+  text-align: center;
+`;
+const ContentR = styled.h3`
+  font-style: italic;
+  padding: 5px;
+  text-align: center;
+`;
+export default Reviews;

@@ -8,12 +8,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
 const Header = () => {
   const { isAuthenticated, user } = useAuth0();
   const [input, setInput] = useState("");
   const navigate = useNavigate();
-  console.log('user',user);
-
   const searchMovies = async (e) => {
     e.preventDefault();
     if (input) {
@@ -50,7 +49,7 @@ const Header = () => {
         </NavLink>
         {isAuthenticated && (
           <NavLink to="/profile">
-            <Greeting>{user.nickname}</Greeting>
+            <Greeting><CgProfile/></Greeting>
           </NavLink>
         )} 
          <form onSubmit={searchMovies}>
@@ -88,7 +87,10 @@ const Nav = styled.nav`
   align-items: center;
   justify-content: space-around;
 `;
-const Greeting = styled.h1``;
+const Greeting = styled.h3`
+color: white;
+font-size: 30px;
+`;
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;

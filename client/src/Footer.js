@@ -1,40 +1,34 @@
 import React from 'react'
 import styled from "styled-components";
-import { NavLink as Link } from "react-router-dom";
-import Login from "./Login";
-import LogOut from "./LogOut";
-import { useAuth0 } from "@auth0/auth0-react";
-
+import { BsGithub,BsLinkedin } from "react-icons/bs";
 
 const Footer = () => {
-
-  const { isAuthenticated } = useAuth0();
-
-
-    //email github linkdin ect 
-    //contact info 
-    //api used 
-    //languages used 
-    //description 
-
     return (
       <Wrapper>
-        <Contact>
-        </Contact>
-        {isAuthenticated ? <LogOut /> : <Login />}
+        
+          <A href='https://www.linkedin.com/in/momshad-hussain-68b557145/'><BsLinkedin/></A>
+          <A href='https://github.com/momshad11'><BsGithub/></A>
       </Wrapper>
     );
   };
-  
-  const Contact = styled.div`
-    
-    
+
+const A = styled.a`
+  font-size: 30px;
+  padding: 25px;
+color: white;
+&:hover{
+  color: black;
+}
 `;
 
 const Wrapper = styled.div`
-height: 300px;
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+height: 100px;
 border-top: 1px solid black;
 width: 100%;
+color: white;
 margin-top: 25px;
 `;
 

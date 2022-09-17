@@ -51,7 +51,6 @@ export const Provider = ({ children }) => {
       .then((res) => res.json())
       .then((data) => {
         setTopRatedMovies(data.results);
-        console.log('topRated', data)
 
       })
       .catch((error) => {
@@ -66,7 +65,6 @@ export const Provider = ({ children }) => {
     const getProtectedMessage = async () => {
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently();
-        console.log("access token ", accessToken);
         fetch("/fetch-message", {
           headers: {
             Authorization: "Bearer " + accessToken,
