@@ -71,7 +71,6 @@ const MoviePage = () => {
     fetch(trailerUrl)
       .then((res) => res.json())
       .then((data) => {
-        console.log("trailer", data);
         setTrailer(data.videos);
       })
       .catch((error) => {
