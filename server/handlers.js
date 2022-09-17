@@ -66,19 +66,22 @@ const getWatchList = async (req, res) => {
   try {
     await client.connect();
     const db = client.db(dbName);
-    console.log("body", req.body);
     const email = req.body.email;
-    console.log(email);
     const user = await db.collection("users").findOne({ email: email });
-    console.log(user);
     const watchlist = [];
 
-    if (user.watchlist.length  === 0) {
+    if (!user.watchlist) {
       watchlist.push(req.body.data);
     } else {
         let exist = false;
         for (const movie of user.watchlist){
-            movie.id === req.body.data.id ? (exist = true) : watchlist.push(movie)
+          console.log(movie);
+          if(movie.id === req.body.data.id ){
+            (exist = true);
+          }
+          else{
+            watchlist.push(movie);
+          }
         }
         if(!exist){
         watchlist.push(req.body.data);

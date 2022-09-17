@@ -8,7 +8,7 @@ const app = express();
 
 const { getUsers, getUser, getWatchList } = require("./handlers");
 
-express()
+app
   .use(function (req, res, next) {
     res.header(
       "Access-Control-Allow-Methods",

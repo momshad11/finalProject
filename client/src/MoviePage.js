@@ -13,7 +13,6 @@ const MoviePage = () => {
   //Usestates For movie page
   const [userDB, setUser] = useState();
   const [isAdded, setIsAdded] = useState(false);
-  const [Added, setAdded] = useState(false);
   const [movie, setMovies] = useState();
   const [genres, setGenres] = useState();
   const [companies, setCompanies] = useState();
@@ -96,7 +95,6 @@ const MoviePage = () => {
   }, [movie, isAuthenticated]);
 
   const handleWatchList = async () => {
-    console.log("user ", userDB.email);
     const body = {
       email: userDB.email,
       data: {
@@ -107,8 +105,7 @@ const MoviePage = () => {
       },
     };
     localStorage.setItem(movie.id, JSON.stringify(movie.id));
-    setAdded(true);
-    console.log("body ", body);
+    setIsAdded((current) => !current);
     try {
       await fetch("/watchlist", {
         method: "PUT",
@@ -185,7 +182,7 @@ const MoviePage = () => {
                 })}
               </Info>
               <A href={movie?.homepage}>Watch Now</A>
-              {!Added && isAuthenticated && (
+              {!isAdded && isAuthenticated && (
                 <Button onClick={handleWatchList}>Add To Watchlist</Button>
               )}
               {!isAuthenticated && (
